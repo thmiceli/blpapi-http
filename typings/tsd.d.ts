@@ -19,3 +19,4 @@
 /// <reference path="form-data/form-data.d.ts" />
 /// <reference path="mockery/mockery.d.ts" />
 /// <reference path="socket.io-client/socket.io-client.d.ts" />
+/// <reference path="memwatch-next/memwatch-next.d.ts" />

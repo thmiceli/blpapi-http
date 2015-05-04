@@ -14,6 +14,8 @@ import util = require('./middleware/util');
 import requestValidator = require('./middleware/request-validator');
 import webSocketHandler = require('./websocket/websocket-handler');
 import apiSession = require('./middleware/api-session');
+import http = require('http');
+import stats = require('./stats');
 
 // DATA
 var pServers: Promise<restify.Server>[] = [];
@@ -28,8 +30,12 @@ function addServerPromise(s: restify.Server): void {
     }));
 }
 
+var statsGen: stats.Generator;
+
 export function startServer(): Promise<restify.Server[]>
 {
+    var servers: http.Server[] = [];
+    
     // Create server.
     var serverOptions = conf.get('serverOptions');
     serverOptions.log = logger;     // Setup bunyan logger
@@ -52,6 +58,8 @@ export function startServer(): Promise<restify.Server[]>
     server.use(blpSession.getSession);
     server.use(auth.getIdentity);
     server.use(requestHandler.elevateRequest);
+    
+    servers.push(server);
 
     // Routing
 
@@ -104,6 +112,8 @@ export function startServer(): Promise<restify.Server[]>
         var io: SocketIO.Namespace = sio(serverSio.server).of('/subscription');
         io.on('connection', webSocketHandler.sioOnConnect);
         addServerPromise(serverSio);
+        
+        servers.push(serverSio);
     }
 
     // ws
@@ -116,7 +126,11 @@ export function startServer(): Promise<restify.Server[]>
         var wss = new webSocket.Server({ server: serverWS.server });
         wss.on('connection', webSocketHandler.wsOnConnect);
         addServerPromise(serverWS);
+        
+        servers.push(serverWS);
     }
+    statsGen = new stats.Generator(servers);
+    
 
     return Promise.all(pServers);
 }
