@@ -20,3 +20,4 @@
 /// <reference path="mockery/mockery.d.ts" />
 /// <reference path="socket.io-client/socket.io-client.d.ts" />
 /// <reference path="memwatch-next/memwatch-next.d.ts" />
+/// <reference path="usage/usage.d.ts" />

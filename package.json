@@ -15,7 +15,8 @@
     "restify": "^2.8.4",
     "socket.io": "^1.2.1",
     "ws": "^0.6.4",
-    "node-memwatch": "marcominetti/node-memwatch"
+    "node-memwatch": "marcominetti/node-memwatch",
+    "usage": "arunoda/node-usage"
   },
   "devDependencies": {
     "mocha": "^2.1.0",
